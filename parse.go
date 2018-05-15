@@ -2,7 +2,7 @@
 //
 // Copyright © 2018 by Ollivier Robert <roberto@keltia.net>
 
-package proxy
+package proxy // import "github.com/keltia/proxy"
 
 import (
 	"bufio"
