@@ -58,7 +58,7 @@ func SetupProxyAuth() (proxyauth string, err error) {
 	// Do we have a proxy user/password?
 	if user != "" && password != "" {
 		auth := fmt.Sprintf("%s:%s", user, password)
-		ctx.proxyauth = "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
+		proxyauth = "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 		err = nil
 	}
 	return
