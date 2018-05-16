@@ -91,6 +91,15 @@ func TestLoadNetrcZero(t *testing.T) {
 	assert.EqualValues(t, "", password, "test password")
 }
 
+func TestLoadNetrcVarEmpty(t *testing.T) {
+	err := os.Setenv("NETRC", "")
+	require.NoError(t, err)
+
+	user, password := loadNetrc()
+	assert.EqualValues(t, "", user, "test user")
+	assert.EqualValues(t, "", password, "test password")
+}
+
 func TestLoadNetrcPerms(t *testing.T) {
 	f := filepath.Join(".", "test/perms-netrc")
 	err := os.Setenv("NETRC", f)
@@ -173,9 +182,21 @@ func TestSetLog(t *testing.T) {
 }
 
 func TestSetLevel(t *testing.T) {
+	SetLevel(1)
+	assert.Equal(t, 1, ctx.level)
 
+	SetLevel(2)
+	assert.Equal(t, 2, ctx.level)
 }
 
 func TestSetupTransport(t *testing.T) {
+	req, trsp := SetupTransport("https://www.example.com/")
+	assert.NotNil(t, req)
+	assert.NotNil(t, trsp)
+}
 
+func TestSetupTransport2(t *testing.T) {
+	req, trsp := SetupTransport(":foo")
+	assert.Nil(t, req)
+	assert.Nil(t, trsp)
 }
