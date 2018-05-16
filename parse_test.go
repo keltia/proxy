@@ -7,6 +7,7 @@ package proxy
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -151,11 +152,24 @@ func TestLoadNetrcBad(t *testing.T) {
 }
 
 func TestGetAuth(t *testing.T) {
+	f := filepath.Join(".", "test/test-netrc")
+	err := os.Setenv("NETRC", f)
+	require.NoError(t, err)
 
+	// We must ensure propre perms
+	err = os.Chmod(f, 0600)
+	require.NoError(t, err)
+	auth, err := SetupProxyAuth()
+	assert.NoError(t, err)
+
+	str := GetAuth()
+	assert.Equal(t, auth, str)
 }
 
 func TestSetLog(t *testing.T) {
-
+	nl := log.New(os.Stderr, MyName, log.Lshortfile)
+	SetLog(nl)
+	assert.EqualValues(t, nl, ctx.Log)
 }
 
 func TestSetLevel(t *testing.T) {
