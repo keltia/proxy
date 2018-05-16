@@ -39,6 +39,7 @@ func TestSetupProxyAuthVerboseNoNetrc(t *testing.T) {
 	_, err = SetupProxyAuth()
 	assert.Error(t, err, "should be an error")
 	assert.Equal(t, ErrNoAuth, err)
+	SetLevel(0)
 }
 
 func TestSetupProxyAuth(t *testing.T) {
@@ -69,6 +70,7 @@ func TestSetupProxyAuthVerbose(t *testing.T) {
 	auth, err := SetupProxyAuth()
 	assert.NoError(t, err, "no error")
 	assert.Equal(t, GoodAuth, auth)
+	SetLevel(0)
 }
 
 // -- loadNetrc
@@ -144,6 +146,7 @@ func TestLoadNetrcGoodVerbose(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "test", user, "test user")
 	assert.EqualValues(t, "test", password, "test password")
+	SetLevel(0)
 }
 
 func TestLoadNetrcBad(t *testing.T) {
@@ -187,6 +190,7 @@ func TestSetLevel(t *testing.T) {
 
 	SetLevel(2)
 	assert.Equal(t, 2, ctx.level)
+	SetLevel(0)
 }
 
 func TestSetupTransport(t *testing.T) {
