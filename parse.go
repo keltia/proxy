@@ -60,6 +60,9 @@ func SetupProxyAuth() (proxyauth string, err error) {
 		auth := fmt.Sprintf("%s:%s", user, password)
 		proxyauth = "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 		err = nil
+
+		// Store copy in context
+		ctx.proxyauth = proxyauth
 	}
 	return
 }
