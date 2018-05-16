@@ -70,15 +70,19 @@ func SetupProxyAuth() (proxyauth string, err error) {
 // SetLevel change the log level (currently 0, 1 or 2)
 func SetLevel(level int) {
 	ctx.level = level
+	debug("logging level set to %d", level)
 }
 
 // SetLog allow to change the default logger
 func SetLog(l *log.Logger) {
 	ctx.Log = l
+	debug("logging logger set to %v", l)
+
 }
 
 // GetAuth returns the proxyauth encoded string
 func GetAuth() string {
+	debug("returns cached credentials")
 	return ctx.proxyauth
 }
 
@@ -224,6 +228,8 @@ func parseNetrc(r io.Reader) (user, password string) {
 		verbose("error reading netrc: %v", err)
 		return "", ""
 	}
+
+	debug("nothing found for %s", proxyTag)
 
 	if user == "" {
 		verbose("no user/password for %s/default in netrc", proxyTag)
