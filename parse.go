@@ -158,7 +158,7 @@ func loadNetrc() (user, password string) {
 		dnetrc = dnetVar
 	}
 
-	verbose("NETRC=%s", dnetVar)
+	verbose("NETRC=%s", dnetrc)
 
 	// First check for permissions
 	fh, err := os.Open(dnetrc)
