@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
@@ -179,7 +180,7 @@ func TestGetAuth(t *testing.T) {
 }
 
 func TestSetLog(t *testing.T) {
-	nl := log.New(os.Stderr, MyName, log.Lshortfile)
+	nl := log.New(os.Stderr, "", log.Lshortfile)
 	SetLog(nl)
 	assert.EqualValues(t, nl, ctx.Log)
 }
@@ -204,3 +205,30 @@ func TestSetupTransport2(t *testing.T) {
 	assert.Nil(t, req)
 	assert.Nil(t, trsp)
 }
+
+func TestGetProxy(t *testing.T) {
+	req, err := http.NewRequest("GET", "https://www.example.com/", nil)
+	assert.NotNil(t, req)
+	assert.NoError(t, err)
+	uri := getProxy(req)
+	assert.Nil(t, uri)
+}
+
+/*func TestGetProxySet(t *testing.T) {
+	SetLevel(2)
+	// Insert our values
+	os.Setenv("HTTP_PROXY", "http://proxy:8080/")
+	os.Setenv("HTTPS_PROXY", "http://proxy:8080/")
+
+	req, err := http.NewRequest("GET", "https://www.example.com/", nil)
+	assert.NotNil(t, req)
+	assert.NoError(t, err)
+
+	t.Logf("req=%#v", req)
+	uri := getProxy(req)
+	assert.NotNil(t, uri)
+
+	prx, _ := url.Parse("http://proxy:8080")
+	assert.Equal(t, prx, uri)
+}
+*/
