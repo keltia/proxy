@@ -4,7 +4,7 @@
 # Copyright 2018 © by Ollivier Robert <roberto@keltia.net>
 #
 
-SRCS=	proxy.go utils.go
+SRCS=	parse.go utils.go
 
 USRCS=	config_unix.go
 WSRCS=	config_windows.go
