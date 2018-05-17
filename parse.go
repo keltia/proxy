@@ -39,7 +39,7 @@ type Context struct {
 
 func init() {
 	// Default is stderr
-	ctx = Context{Log: log.New(os.Stderr, MyName, log.LstdFlags)}
+	ctx = Context{Log: log.New(os.Stderr, "", log.LstdFlags)}
 }
 
 // ErrNoAuth is just to say we do not use auth for proxy
