@@ -21,7 +21,7 @@ const (
 	proxyTag = "proxy"
 
 	// MyVersion is our API Version
-	MyVersion = "0.9.0"
+	MyVersion = "0.9.1"
 
 	// MyName is the library name
 	MyName = "proxy"
@@ -39,7 +39,7 @@ type Context struct {
 
 func init() {
 	// Default is stderr
-	ctx = Context{Log: log.New(os.Stderr, MyName, log.LstdFlags)}
+	ctx = Context{Log: log.New(os.Stderr, "", log.LstdFlags)}
 }
 
 // ErrNoAuth is just to say we do not use auth for proxy
@@ -158,7 +158,11 @@ func loadNetrc() (user, password string) {
 		dnetrc = dnetVar
 	}
 
-	verbose("NETRC=%s", dnetVar)
+	if dnetrc == "ignore" {
+		return "", ""
+	}
+
+	verbose("NETRC=%s", dnetrc)
 
 	// First check for permissions
 	fh, err := os.Open(dnetrc)
