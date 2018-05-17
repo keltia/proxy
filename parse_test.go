@@ -95,7 +95,7 @@ func TestLoadNetrcZero(t *testing.T) {
 }
 
 func TestLoadNetrcVarEmpty(t *testing.T) {
-	err := os.Setenv("NETRC", "")
+	err := os.Setenv("NETRC", "ignore")
 	require.NoError(t, err)
 
 	user, password := loadNetrc()
@@ -207,6 +207,9 @@ func TestSetupTransport2(t *testing.T) {
 }
 
 func TestGetProxy(t *testing.T) {
+	err := os.Setenv("NETRC", "ignore")
+	require.NoError(t, err)
+
 	req, err := http.NewRequest("GET", "https://www.example.com/", nil)
 	assert.NotNil(t, req)
 	assert.NoError(t, err)

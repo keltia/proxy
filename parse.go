@@ -158,6 +158,10 @@ func loadNetrc() (user, password string) {
 		dnetrc = dnetVar
 	}
 
+	if dnetrc == "ignore" {
+		return "", ""
+	}
+
 	verbose("NETRC=%s", dnetrc)
 
 	// First check for permissions
