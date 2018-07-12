@@ -193,7 +193,6 @@ func loadNetrc() (user, password string) {
    Format:
    machine proxy|default login <user> password <pass>
 */
-// parseDbrc loads the file format historically defined by DBI::Dbrc
 func parseNetrc(r io.Reader) (user, password string) {
 	verbose("found netrc")
 
