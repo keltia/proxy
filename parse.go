@@ -21,7 +21,7 @@ const (
 	proxyTag = "proxy"
 
 	// MyVersion is our API Version
-	MyVersion = "0.9.1"
+	MyVersion = "0.9.2"
 
 	// MyName is the library name
 	MyName = "proxy"
@@ -204,7 +204,7 @@ func parseNetrc(r io.Reader) (user, password string) {
 		}
 
 		flds := strings.Split(line, " ")
-		verbose("%s: %d fields", line, len(flds))
+		debug("%s: %d fields", line, len(flds))
 
 		if flds[0] != "machine" {
 			verbose("machine is not the first word")
