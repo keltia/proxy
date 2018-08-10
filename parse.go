@@ -21,7 +21,7 @@ const (
 	proxyTag = "proxy"
 
 	// MyVersion is our API Version
-	MyVersion = "0.9.2"
+	MyVersion = "0.9.3"
 
 	// MyName is the library name
 	MyName = "proxy"
@@ -193,7 +193,6 @@ func loadNetrc() (user, password string) {
    Format:
    machine proxy|default login <user> password <pass>
 */
-// parseDbrc loads the file format historically defined by DBI::Dbrc
 func parseNetrc(r io.Reader) (user, password string) {
 	verbose("found netrc")
 

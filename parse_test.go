@@ -25,9 +25,10 @@ func TestSetupProxyAuthNoNetrc(t *testing.T) {
 	err := os.Setenv("NETRC", f)
 	require.NoError(t, err)
 
-	_, err = SetupProxyAuth()
+	auth, err := SetupProxyAuth()
 	assert.Error(t, err, "should be an error")
 	assert.Equal(t, ErrNoAuth, err)
+	assert.Empty(t, auth)
 }
 
 func TestSetupProxyAuthVerboseNoNetrc(t *testing.T) {
@@ -37,9 +38,10 @@ func TestSetupProxyAuthVerboseNoNetrc(t *testing.T) {
 	err := os.Setenv("NETRC", f)
 	require.NoError(t, err)
 
-	_, err = SetupProxyAuth()
+	auth, err := SetupProxyAuth()
 	assert.Error(t, err, "should be an error")
 	assert.Equal(t, ErrNoAuth, err)
+	assert.Empty(t, auth)
 	SetLevel(0)
 }
 
