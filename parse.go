@@ -21,7 +21,7 @@ const (
 	proxyTag = "proxy"
 
 	// MyVersion is our API Version
-	MyVersion = "0.9.2"
+	MyVersion = "0.9.3"
 
 	// MyName is the library name
 	MyName = "proxy"
