@@ -4,6 +4,7 @@
 # Copyright 2018 © by Ollivier Robert <roberto@keltia.net>
 #
 
+GO=		go
 SRCS=	parse.go utils.go
 
 USRCS=	config_unix.go
@@ -14,22 +15,22 @@ OPTS=	-ldflags="-s -w" -v
 all: build
 
 build: ${SRCS} ${USRCS}
-	go build ${OPTS}
+	${GO} build ${OPTS}
 
 test: build
 	(unset http_proxy https_proxy && go test )
 
 windows: ${SRCS} ${WSRCS}
-	GOOS=windows go build ${OPTS} .
+	GOOS=windows ${GO} build ${OPTS} .
 
 install:
-	go install ${OPTS} .
+	${GO} install ${OPTS} .
 
 lint:
 	gometalinter .
 
 clean:
-	go clean .
+	${GO} clean .
 
 push:
 	git push --all
