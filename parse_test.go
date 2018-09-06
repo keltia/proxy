@@ -29,6 +29,8 @@ func TestSetupProxyAuthNoNetrc(t *testing.T) {
 	assert.Error(t, err, "should be an error")
 	assert.Equal(t, ErrNoAuth, err)
 	assert.Empty(t, auth)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetupProxyAuthVerboseNoNetrc(t *testing.T) {
@@ -43,6 +45,8 @@ func TestSetupProxyAuthVerboseNoNetrc(t *testing.T) {
 	assert.Equal(t, ErrNoAuth, err)
 	assert.Empty(t, auth)
 	SetLevel(0)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetupProxyAuth(t *testing.T) {
@@ -57,6 +61,8 @@ func TestSetupProxyAuth(t *testing.T) {
 	auth, err := SetupProxyAuth()
 	assert.NoError(t, err, "no error")
 	assert.Equal(t, GoodAuth, auth)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetupProxyAuthVerbose(t *testing.T) {
@@ -74,6 +80,8 @@ func TestSetupProxyAuthVerbose(t *testing.T) {
 	assert.NoError(t, err, "no error")
 	assert.Equal(t, GoodAuth, auth)
 	SetLevel(0)
+
+	os.Unsetenv("NETRC")
 }
 
 // -- loadNetrc
@@ -85,6 +93,8 @@ func TestLoadNetrcNoFile(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "null user")
 	assert.EqualValues(t, "", password, "null password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcZero(t *testing.T) {
@@ -94,6 +104,8 @@ func TestLoadNetrcZero(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcVarEmpty(t *testing.T) {
@@ -103,6 +115,8 @@ func TestLoadNetrcVarEmpty(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcPerms(t *testing.T) {
@@ -119,6 +133,8 @@ func TestLoadNetrcPerms(t *testing.T) {
 
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcGood(t *testing.T) {
@@ -133,6 +149,8 @@ func TestLoadNetrcGood(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "test", user, "test user")
 	assert.EqualValues(t, "test", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcGoodVerbose(t *testing.T) {
@@ -150,6 +168,8 @@ func TestLoadNetrcGoodVerbose(t *testing.T) {
 	assert.EqualValues(t, "test", user, "test user")
 	assert.EqualValues(t, "test", password, "test password")
 	SetLevel(0)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcBad(t *testing.T) {
@@ -164,6 +184,8 @@ func TestLoadNetrcBad(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestGetAuth(t *testing.T) {
@@ -179,6 +201,8 @@ func TestGetAuth(t *testing.T) {
 
 	str := GetAuth()
 	assert.Equal(t, auth, str)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetLog(t *testing.T) {
