@@ -251,9 +251,7 @@ func TestSetupTransport2(t *testing.T) {
 }
 
 func TestGetProxy(t *testing.T) {
-	err := os.Setenv("NETRC", "ignore")
-	require.NoError(t, err)
-
+	unsetvars(t)
 	req, err := http.NewRequest("GET", "https://www.example.com/", nil)
 	assert.NotNil(t, req)
 	assert.NoError(t, err)
@@ -261,20 +259,24 @@ func TestGetProxy(t *testing.T) {
 	assert.Nil(t, uri)
 }
 
-/*func TestGetProxySet(t *testing.T) {
-	SetLevel(2)
-	// Insert our values
-	os.Setenv("HTTP_PROXY", "http://proxy:8080/")
-	os.Setenv("HTTPS_PROXY", "http://proxy:8080/")
+func TestGetProxySet(t *testing.T) {
+	setvars(t)
 
-	req, err := http.NewRequest("GET", "https://www.example.com/", nil)
+	req, err := http.NewRequest("GET", "http://www.example.com/", nil)
 	assert.NotNil(t, req)
 	assert.NoError(t, err)
 
-	t.Logf("req=%#v", req)
+	u, err := http.ProxyFromEnvironment(req)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, u)
+
 	uri := getProxy(req)
 	assert.NotNil(t, uri)
 
-	prx, _ := url.Parse("http://proxy:8080")
-	assert.Equal(t, prx, uri)
+	assert.EqualValues(t, uri, u)
+
+	prx, _ := url.Parse("http://proxy:8080/")
+	assert.EqualValues(t, prx, uri)
+
+	unsetvars(t)
 }
