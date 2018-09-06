@@ -21,6 +21,22 @@ const (
 	GoodAuth = "Basic dGVzdDp0ZXN0"
 )
 
+func setvars(t *testing.T) {
+	// Insert our values
+	require.NoError(t, os.Setenv("HTTP_PROXY", "http://proxy:8080/"))
+	require.NoError(t, os.Setenv("HTTPS_PROXY", "http://proxy:8080/"))
+	require.NoError(t, os.Setenv("http_proxy", "http://proxy:8080/"))
+	require.NoError(t, os.Setenv("https_proxy", "http://proxy:8080/"))
+}
+
+func unsetvars(t *testing.T) {
+	// Remove our values
+	require.NoError(t, os.Unsetenv("HTTP_PROXY"))
+	require.NoError(t, os.Unsetenv("HTTPS_PROXY"))
+	require.NoError(t, os.Unsetenv("http_proxy"))
+	require.NoError(t, os.Unsetenv("https_proxy"))
+}
+
 // --- setupProxyAuth
 func TestSetupProxyAuthNoNetrc(t *testing.T) {
 	f := filepath.Join(".", "test/no-netrc")
@@ -262,4 +278,3 @@ func TestGetProxy(t *testing.T) {
 	prx, _ := url.Parse("http://proxy:8080")
 	assert.Equal(t, prx, uri)
 }
-*/
