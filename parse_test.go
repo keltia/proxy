@@ -5,19 +5,37 @@
 package proxy
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const (
 	// GoodAuth is test:test
 	GoodAuth = "Basic dGVzdDp0ZXN0"
 )
+
+func setvars(t *testing.T) {
+	// Insert our values
+	require.NoError(t, os.Setenv("HTTP_PROXY", "http://proxy:8080/"))
+	require.NoError(t, os.Setenv("HTTPS_PROXY", "http://proxy:8080/"))
+	require.NoError(t, os.Setenv("http_proxy", "http://proxy:8080/"))
+	require.NoError(t, os.Setenv("https_proxy", "http://proxy:8080/"))
+}
+
+func unsetvars(t *testing.T) {
+	// Remove our values
+	require.NoError(t, os.Unsetenv("HTTP_PROXY"))
+	require.NoError(t, os.Unsetenv("HTTPS_PROXY"))
+	require.NoError(t, os.Unsetenv("http_proxy"))
+	require.NoError(t, os.Unsetenv("https_proxy"))
+}
 
 // --- setupProxyAuth
 func TestSetupProxyAuthNoNetrc(t *testing.T) {
@@ -29,6 +47,8 @@ func TestSetupProxyAuthNoNetrc(t *testing.T) {
 	assert.Error(t, err, "should be an error")
 	assert.Equal(t, ErrNoAuth, err)
 	assert.Empty(t, auth)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetupProxyAuthVerboseNoNetrc(t *testing.T) {
@@ -43,6 +63,8 @@ func TestSetupProxyAuthVerboseNoNetrc(t *testing.T) {
 	assert.Equal(t, ErrNoAuth, err)
 	assert.Empty(t, auth)
 	SetLevel(0)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetupProxyAuth(t *testing.T) {
@@ -57,6 +79,8 @@ func TestSetupProxyAuth(t *testing.T) {
 	auth, err := SetupProxyAuth()
 	assert.NoError(t, err, "no error")
 	assert.Equal(t, GoodAuth, auth)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetupProxyAuthVerbose(t *testing.T) {
@@ -74,6 +98,8 @@ func TestSetupProxyAuthVerbose(t *testing.T) {
 	assert.NoError(t, err, "no error")
 	assert.Equal(t, GoodAuth, auth)
 	SetLevel(0)
+
+	os.Unsetenv("NETRC")
 }
 
 // -- loadNetrc
@@ -85,6 +111,8 @@ func TestLoadNetrcNoFile(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "null user")
 	assert.EqualValues(t, "", password, "null password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcZero(t *testing.T) {
@@ -94,6 +122,8 @@ func TestLoadNetrcZero(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcVarEmpty(t *testing.T) {
@@ -103,6 +133,8 @@ func TestLoadNetrcVarEmpty(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcPerms(t *testing.T) {
@@ -119,6 +151,8 @@ func TestLoadNetrcPerms(t *testing.T) {
 
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcGood(t *testing.T) {
@@ -133,6 +167,8 @@ func TestLoadNetrcGood(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "test", user, "test user")
 	assert.EqualValues(t, "test", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcGoodVerbose(t *testing.T) {
@@ -150,6 +186,8 @@ func TestLoadNetrcGoodVerbose(t *testing.T) {
 	assert.EqualValues(t, "test", user, "test user")
 	assert.EqualValues(t, "test", password, "test password")
 	SetLevel(0)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestLoadNetrcBad(t *testing.T) {
@@ -164,6 +202,8 @@ func TestLoadNetrcBad(t *testing.T) {
 	user, password := loadNetrc()
 	assert.EqualValues(t, "", user, "test user")
 	assert.EqualValues(t, "", password, "test password")
+
+	os.Unsetenv("NETRC")
 }
 
 func TestGetAuth(t *testing.T) {
@@ -179,6 +219,8 @@ func TestGetAuth(t *testing.T) {
 
 	str := GetAuth()
 	assert.Equal(t, auth, str)
+
+	os.Unsetenv("NETRC")
 }
 
 func TestSetLog(t *testing.T) {
@@ -209,9 +251,7 @@ func TestSetupTransport2(t *testing.T) {
 }
 
 func TestGetProxy(t *testing.T) {
-	err := os.Setenv("NETRC", "ignore")
-	require.NoError(t, err)
-
+	unsetvars(t)
 	req, err := http.NewRequest("GET", "https://www.example.com/", nil)
 	assert.NotNil(t, req)
 	assert.NoError(t, err)
@@ -219,21 +259,24 @@ func TestGetProxy(t *testing.T) {
 	assert.Nil(t, uri)
 }
 
-/*func TestGetProxySet(t *testing.T) {
-	SetLevel(2)
-	// Insert our values
-	os.Setenv("HTTP_PROXY", "http://proxy:8080/")
-	os.Setenv("HTTPS_PROXY", "http://proxy:8080/")
+func TestGetProxySet(t *testing.T) {
+	setvars(t)
 
-	req, err := http.NewRequest("GET", "https://www.example.com/", nil)
+	req, err := http.NewRequest("GET", "http://www.example.com/", nil)
 	assert.NotNil(t, req)
 	assert.NoError(t, err)
 
-	t.Logf("req=%#v", req)
+	u, err := http.ProxyFromEnvironment(req)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, u)
+
 	uri := getProxy(req)
 	assert.NotNil(t, uri)
 
-	prx, _ := url.Parse("http://proxy:8080")
-	assert.Equal(t, prx, uri)
+	assert.EqualValues(t, uri, u)
+
+	prx, _ := url.Parse("http://proxy:8080/")
+	assert.EqualValues(t, prx, uri)
+
+	unsetvars(t)
 }
-*/
