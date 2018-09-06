@@ -15,6 +15,8 @@ import (
 	"net/url"
 	"os"
 	"strings"
+
+	"golang.org/x/net/http/httpproxy"
 )
 
 const (
@@ -123,13 +125,9 @@ func SetupTransport(str string) (*http.Request, *http.Transport) {
 // Private functions
 
 func getProxy(req *http.Request) (uri *url.URL) {
-	uri, err := http.ProxyFromEnvironment(req)
-	if err != nil {
-		verbose("no proxy in environment")
-		uri = &url.URL{}
-	} else if uri == nil {
-		verbose("No proxy configured or url excluded")
-	}
+	config := httpproxy.FromEnvironment()
+	f := config.ProxyFunc()
+	uri, _ = f(req.URL)
 	return
 }
 
