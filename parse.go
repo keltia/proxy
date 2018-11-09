@@ -23,7 +23,7 @@ const (
 	proxyTag = "proxy"
 
 	// MyVersion is our API Version
-	MyVersion = "0.9.4"
+	MyVersion = "0.9.5"
 
 	// MyName is the library name
 	MyName = "proxy"
@@ -120,6 +120,11 @@ func SetupTransport(str string) (*http.Request, *http.Transport) {
 	}
 	debug("transport=%#v", transport)
 	return req, transport
+}
+
+// Version should be obvious
+func Version() string {
+	return MyVersion
 }
 
 // Private functions
