@@ -122,6 +122,11 @@ func SetupTransport(str string) (*http.Request, *http.Transport) {
 	return req, transport
 }
 
+// Version should be obvious
+func Version() string {
+	return MyVersion
+}
+
 // Private functions
 
 func getProxy(req *http.Request) (uri *url.URL) {

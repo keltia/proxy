@@ -21,6 +21,11 @@ const (
 	GoodAuth = "Basic dGVzdDp0ZXN0"
 )
 
+func TestVersion(t *testing.T) {
+	str := Version()
+	require.Equal(t, MyVersion, str)
+}
+
 func setvars(t *testing.T) {
 	// Insert our values
 	require.NoError(t, os.Setenv("HTTP_PROXY", "http://proxy:8080/"))
