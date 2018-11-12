@@ -108,6 +108,13 @@ func TestSetupProxyAuthVerbose(t *testing.T) {
 }
 
 // -- loadNetrc
+func TestLoadNetrcNoNetrc(t *testing.T) {
+	netrcFile = "ignore"
+	user, password := loadNetrc()
+	assert.EqualValues(t, "", user, "null user")
+	assert.EqualValues(t, "", password, "null password")
+}
+
 func TestLoadNetrcNoFile(t *testing.T) {
 	f := filepath.Join(".", "test/no-netrc")
 	err := os.Setenv("NETRC", f)
